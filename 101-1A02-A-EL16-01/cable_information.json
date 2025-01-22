@@ -1,0 +1,18 @@
+{
+    "CableNumber": "101-1A02-A-EL16-01",
+    "SourceTag": "101-ELP732A",
+    "SourceDescription": "120/208VAC PANELBOARD",
+    "DestinationTag": "101/1A02/A/EL16/1",
+    "DestinationDescription": "Emergency Lighting Fixture",
+    "CableDescription": "TECK CONNECTOR 1/2\" HUB 0.725\" - 0.885\" RANGE OVER JACKET",
+    "CableType": "2C#10 Teck Cable",
+    "EstimatedLength": null,
+    "Route": [
+        "101-LCT-112, 101-LCT-113, 101-LCT-111, 101-LCT-129, 101-LCT-128, 101-LCT-127, 101-LCT-130, 101-LCT-172, None"
+    ],
+    "PathType": "Best",
+    "ExpectedPullLength": 88.21744723336626,
+    "GeometricLength": 85.53982494334265,
+    "DateProcessed": "2025-01-21 13:34:50.052047",
+    "VersionNumber": "1.0"
+}

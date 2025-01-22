@@ -1,0 +1,18 @@
+{
+    "CableNumber": "101-1A02-A-EL16-05",
+    "SourceTag": "101/1A02/A/EL16/4",
+    "SourceDescription": "Emergency Lighting Fixture",
+    "DestinationTag": "101/1A02/A/EL16/5",
+    "DestinationDescription": "Emergency Lighting Fixture",
+    "CableDescription": "TECK CONNECTOR 1/2\" HUB 0.725\" - 0.885\" RANGE OVER JACKET",
+    "CableType": "2C#10 Teck Cable",
+    "EstimatedLength": null,
+    "Route": [
+        "None, 101-LCT-177"
+    ],
+    "PathType": "Best",
+    "ExpectedPullLength": 32.10475734592503,
+    "GeometricLength": 27.42654083195566,
+    "DateProcessed": "2025-01-21 14:13:46.754041",
+    "VersionNumber": "1.0"
+}
