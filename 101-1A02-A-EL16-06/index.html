@@ -264,48 +264,14 @@
     <!-- No JSON loaded message -->
     <div id="no-json-message">
       Industrial Minimodels.<br>
-      No properties loaded for this model; dummy values below.
     </div>
 
-    <!-- Property Sections with Dummy Values -->
-    <button class="collapsible">Geometry</button>
-    <div class="content" id="geometry-content">
-      <p>Prop1: Value1<br>Prop2: Value2</p>
-    </div>
+    <!-- Property Sections -dynamic-->
 
-    <button class="collapsible">Materials</button>
-    <div class="content" id="materials-content">
-      <p>Prop1: Value1<br>Prop2: Value2</p>
-    </div>
+    <div id="sections-container">
+      <!-- Collapsible sections will be dynamically inserted here -->
+  </div>
 
-    <button class="collapsible">Metadata</button>
-    <div class="content" id="metadata-content">
-      <p>Prop1: Value1<br>Prop2: Value2</p>
-    </div>
-
-    <!-- Links: Docs Section -->
-    <button class="collapsible">Links: Docs</button>
-    <div class="content" id="doc-references-content">
-      <p>Link1<br>Link2</p>
-    </div>
-
-    <!-- Links: Progress Section -->
-    <button class="collapsible">Links: Progress</button>
-    <div class="content" id="progress-links-content">
-      <p>Link1<br>Link2</p>
-    </div>
-
-    <!-- Links: Quality Section -->
-    <button class="collapsible">Links: Quality</button>
-    <div class="content" id="quality-links-content">
-      <p>Link1<br>Link2</p>
-    </div>
-
-    <!-- Links: Other Section -->
-    <button class="collapsible">Links: Other</button>
-    <div class="content" id="other-links-content">
-      <p>Link1<br>Link2</p>
-    </div>
 
     <!-- Settings Tab -->
     <div id="settings-tab" onclick="toggleSettings()">
@@ -333,7 +299,7 @@
   <!-- JavaScript for Collapsible, Settings, JSON Loading, and Logging -->
   <script>
     const glbFileUrl = './mini_model.glb';
-    const jsonFileUrl = '';  
+    const jsonFileUrl = 'cable_information.json';  
     const messageDelay = 750; 
 
     const logMessages = ["> WELCOME", "> LOADING VIEWER...", "> LOADING MINIMODEL...", "> ...COMPLETE"];
@@ -419,6 +385,103 @@
       toggleCRT();
     }
   </script>
+
+<script>
+  async function loadJson() {
+      try {
+          console.info('Fetching JSON file...');
+          // Fetch the JSON file
+          const response = await fetch('./cable_information.json');
+          if (!response.ok) {
+              throw new Error(`Failed to load JSON file: ${response.statusText}`);
+          }
+
+          const data = await response.json();
+          console.info('JSON loaded successfully:', data);
+
+          const container = document.getElementById('sections-container');
+          let currentSection = null;
+
+          for (const [key, value] of Object.entries(data)) {
+              if (key === 'Section') {
+                  console.info(`Creating new section for: ${value}`);
+
+                  // Close previous section content
+                  if (currentSection) {
+                      currentSection.content.innerHTML += '</p>';
+                  }
+
+                  // Create a new section
+                  const button = document.createElement('button');
+                  button.className = 'collapsible';
+                  button.textContent = value;
+                  container.appendChild(button);
+
+                  const content = document.createElement('div');
+                  content.className = 'content';
+                  content.id = `${value.toLowerCase().replace(/\s+/g, '-')}-content`;
+                  content.innerHTML = '<p>';
+                  container.appendChild(content);
+
+                  currentSection = { button, content };
+              } else {
+                  console.info(`Adding key-value pair: ${key} - ${value}`);
+
+                  // Add property-value pair to the current section or root
+                  const valueText = typeof value === 'string' && (value.startsWith('http://') || value.startsWith('https://'))
+                      ? `<a href="${value}" target="_blank">(link)</a>`
+                      : Array.isArray(value) ? value.join(', ') : value ?? 'N/A';
+
+                  if (currentSection) {
+                      currentSection.content.innerHTML += `${key}: ${valueText}<br>`;
+                  } else {
+                      const defaultContent = document.getElementById('default-content');
+                      if (!defaultContent) {
+                          const defaultButton = document.createElement('button');
+                          defaultButton.className = 'collapsible';
+                          defaultButton.textContent = 'General';
+                          container.appendChild(defaultButton);
+
+                          const defaultDiv = document.createElement('div');
+                          defaultDiv.className = 'content';
+                          defaultDiv.id = 'default-content';
+                          defaultDiv.innerHTML = '<p>';
+                          container.appendChild(defaultDiv);
+
+                          currentSection = { button: defaultButton, content: defaultDiv };
+                      }
+                      currentSection.content.innerHTML += `${key}: ${valueText}<br>`;
+                  }
+              }
+          }
+
+          // Finalize the last section
+          if (currentSection) {
+              currentSection.content.innerHTML += '</p>';
+          }
+
+          // Add event listeners to toggle collapsibles
+          const collapsibles = document.getElementsByClassName('collapsible');
+          for (const collapsible of collapsibles) {
+              collapsible.addEventListener('click', function () {
+                  this.classList.toggle('active');
+                  const content = this.nextElementSibling;
+                  if (content.style.display === 'block') {
+                      content.style.display = 'none';
+                  } else {
+                      content.style.display = 'block';
+                  }
+              });
+          }
+      } catch (error) {
+          console.error('Error loading JSON:', error);
+      }
+  }
+
+  // Load the JSON on page load
+  window.onload = loadJson;
+</script>
+
 
 </body>
 </html>
